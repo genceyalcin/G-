@@ -1,2 +1,2 @@
-# G-
+# G++
 An Interpreted Language that I wrote for fun...
