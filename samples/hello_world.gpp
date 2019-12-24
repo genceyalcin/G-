@@ -1,0 +1,8 @@
+; Semicolons terminate statements, meaning nothing after a
+; semicolon is interpreted. Use them for comments
+
+gint x = 1 + 4 - 2;
+gint y = 3 + 2 * 6;
+gint z = 2.5 - 6.5 + 2.0;
+
+6.6 / 3.3 / 1;

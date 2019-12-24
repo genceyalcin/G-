@@ -1,0 +1,8 @@
+expr	:	keyword identifier = expr
+		:	factor ((+|-) term)*
+
+term	:	factor ((*|/) factor)*
+
+factor 	:	number
+		:	-number
+		:	(expr)
