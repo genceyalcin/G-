@@ -5,6 +5,7 @@
 #define NUM "num"
 #define KEYWORD "keyword"
 #define IDENTIFIER "identifier"
+#define EQ_NODE "equals"
 	
 #define FACTOR "factor"
 #define TER "term"
@@ -29,6 +30,8 @@ BinaryNode * Parser_Expr(Token * token, uint32_t noTokens, uint32_t index);
 BinaryNode * Parser_KeywordNode(Token token);
 
 BinaryNode * Parser_IdentifierNode(Token token);
+
+BinaryNode * Parser_EqualsNode(Token token);
 
 BinaryNode * Parser_BinaryOperatorNode(Token token);
 

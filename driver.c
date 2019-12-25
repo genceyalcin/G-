@@ -8,11 +8,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <inttypes.h>
+#include <assert.h>
 
 #include "version.h"
 #include "lexer.h"
 #include "parser.h"
 #include "interpreter.h"
+
+#include "trackers/variables.h"
 
 /**
  *	Main function:
@@ -30,7 +33,8 @@ int main(int argc, char ** argv) {
 		}
 	}
 		
-
+	Variables_CreateVariableTable();
+	
 	char line[LINE_MAX];
 
 	while (argc >= 2 && fgets(line, LINE_MAX, gpp_file) != NULL) {

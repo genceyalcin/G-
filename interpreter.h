@@ -17,8 +17,14 @@ Number Interpreter_Multiply(Number left, Number right);
 
 void Interpreter_Interpret(ParseTree parseTree);
 
+void Interpreter_VisitKeyword(BinaryNode * node);
+
+void * Interpreter_VisitIdentifier(BinaryNode * node);
+
 Number Interpreter_VisitOperation(BinaryNode * node);
 
 Number Interpreter_VisitNumber(BinaryNode * node);
+
+uint32_t elfhash(const char* str);
 
 #endif

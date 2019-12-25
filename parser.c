@@ -34,6 +34,12 @@ BinaryNode * Parser_Factor(Token * token, uint32_t noTokens, uint32_t index) {
 		tokenPointer++;
 		return Parser_NumberNode(*token);
 	}
+	
+	if (tokenPointer->type == IDENTIFIER_T) {
+		printf("%s\n", tokenPointer->value);
+		tokenPointer++;
+		return Parser_IdentifierNode(*token);
+	}
 
 	if (tokenPointer->type == SUB_T) {
 		uint32_t count = 1;
@@ -69,7 +75,7 @@ BinaryNode * Parser_Factor(Token * token, uint32_t noTokens, uint32_t index) {
 
 BinaryNode * Parser_Term(Token * token, uint32_t noTokens, uint32_t index) {
 
-	BinaryNode * factorLeft = Parser_Factor(token, noTokens, index); 
+	BinaryNode * factorLeft = Parser_Factor(tokenPointer, noTokens, index); 
 	BinaryNode * newNode;
 
 	while (tokenPointer->type == MUL_T || tokenPointer->type == DIV_T) {
@@ -87,36 +93,44 @@ BinaryNode * Parser_Term(Token * token, uint32_t noTokens, uint32_t index) {
 
 BinaryNode * Parser_Expr(Token * token, uint32_t noTokens, uint32_t index) {
 
+	Token * keyword = NULL;
 	if (tokenPointer->type == KEYWORD_T) {
-		printf("Keyword found %s\n", tokenPointer->value);
-		Token * keyword = tokenPointer;
+		keyword = tokenPointer;
 		tokenPointer++;
-		if (tokenPointer->type == IDENTIFIER_T) {
-			printf("Identifer found %s\n", tokenPointer->value);
-			Token * identifier = tokenPointer;
+	}
+	
+	if (tokenPointer->type == IDENTIFIER_T) {
+		Token * identifier = tokenPointer;
+		tokenPointer++;
+		if (tokenPointer->type == EQUALS_T) {
+			Token * equals = tokenPointer;
 			tokenPointer++;
-			if (tokenPointer->type == EQUALS_T) {
-				printf("Equals found %s\n", tokenPointer->value);
-				tokenPointer++;
-				if (tokenPointer->type == GINT_T || tokenPointer->type == GLOAT_T) {
-					printf("Keyword found %s\n", tokenPointer->value);
-					BinaryNode * exprResult = Parser_Expr(tokenPointer, noTokens, index);
-					BinaryNode * keywordNode = Parser_KeywordNode(*keyword);
-					BinaryNode * identifierNode = Parser_IdentifierNode(*identifier);
+			if (tokenPointer->type == GINT_T || tokenPointer->type == GLOAT_T || tokenPointer->type == IDENTIFIER_T) {
+				BinaryNode * exprResult = Parser_Expr(tokenPointer, noTokens, index);
+				BinaryNode * identifierNode = Parser_IdentifierNode(*identifier);
+				BinaryNode * eqNode = Parser_EqualsNode(*equals);
 
+				if (keyword != NULL) {
+					BinaryNode * keywordNode = Parser_KeywordNode(*keyword);
 					identifierNode->right = exprResult;
+					identifierNode->left = eqNode;
 					keywordNode->right = identifierNode; 
 					return keywordNode;
 				}
-			} else {
-				return NULL;
+				else {
+					identifierNode->right = exprResult;
+					identifierNode->left = eqNode;
+					return identifierNode;
+				}
 			}
+		} else if (tokenPointer->type == ADD_T || tokenPointer->type == SUB_T) {
+			tokenPointer--;
 		} else {
 			return NULL;
 		}
 	}
 
-	BinaryNode * factorLeft = Parser_Term(token, noTokens, index); 
+	BinaryNode * factorLeft = Parser_Term(tokenPointer, noTokens, index); 
 	BinaryNode * newNode;
 
 	while (tokenPointer->type == ADD_T || tokenPointer->type == SUB_T) {
@@ -149,6 +163,18 @@ BinaryNode * Parser_IdentifierNode(Token token) {
 	BinaryNode * node = malloc(sizeof(BinaryNode));
 
 	node->nodeType = IDENTIFIER;
+	node->token = token;
+	node->left = NULL;
+	node->right = NULL;
+
+	return node;
+}
+
+BinaryNode * Parser_EqualsNode(Token token) {
+
+	BinaryNode * node = malloc(sizeof(BinaryNode));
+
+	node->nodeType = EQ_NODE;
 	node->token = token;
 	node->left = NULL;
 	node->right = NULL;
@@ -207,56 +233,3 @@ void Parser_PrintTree(BinaryNode * thisNode) {
 		printf(")");
 	}
 }
-
-// ParseTree Parser_CreateParseTree(Line line) {
-
-// 	ParseTree parseTree;
-// 	BinaryNode * root;
-
-// 	for (uint32_t i = 0; i < line.noTokens; i++) {
-
-// 		BinaryNode * newNode;
-
-// 		if (line.tokensArray[i].type == GINT_T || line.tokensArray[i].type == GLOAT_T) {	// FACTOR
-// 			newNode = Parser_NumberNode(line.tokensArray[i]);
-// 			root = newNode;
-// 		}
-
-// 		else if (line.tokensArray[i].type == MUL_T || line.tokensArray[i].type == DIV_T) {		// 
-// 			while (line.tokensArray[i].type == MUL_T || line.tokensArray[i].type == DIV_T) {
-// 				newNode = Parser_BinaryOperatorNode(line.tokensArray[i], root);
-// 				i++;
-// 				if (line.tokensArray[i].type == GINT_T || line.tokensArray[i].type == GLOAT_T) {
-// 					newNode->right = Parser_NumberNode(line.tokensArray[i]);
-// 					root = newNode;
-// 					i++;
-// 				}
-// 				if (i < line.noTokens && line.tokensArray[i].type != MUL_T && line.tokensArray[i].type != DIV_T) {
-// 					i--;
-// 					break;
-// 				}
-// 			}
-// 		}
-
-// 		else if (line.tokensArray[i].type == ADD_T || line.tokensArray[i].type == SUB_T) {
-// 			while (line.tokensArray[i].type == ADD_T || line.tokensArray[i].type == SUB_T) {
-// 				newNode = Parser_BinaryOperatorNode(line.tokensArray[i], root);
-// 				i++;
-// 				if (line.tokensArray[i].type == GINT_T || line.tokensArray[i].type == GLOAT_T) {
-// 					newNode->right = Parser_NumberNode(line.tokensArray[i]);
-// 					root = newNode;
-// 					i++;
-// 				}
-// 				if (i < line.noTokens && line.tokensArray[i].type != ADD_T && line.tokensArray[i].type != SUB_T) {
-// 					i--;
-// 					break;
-// 				}
-// 			}
-// 		}
-// 	}
-
-// 	parseTree.root = root;
-
-// 	return parseTree;
-
-// }
