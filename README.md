@@ -36,15 +36,15 @@ Interpreter:
 (As of now)
 
 expr	
-	- attribute keyword identifier = expr
-	- keyword identifier = expr
- 	- identifer = expr
-	- factor ((+|-) term)*
+  - attribute keyword identifier = expr
+  - keyword identifier = expr
+  - identifer = expr
+  - factor ((+|-) term)*
 
 term	
-	- factor ((*|/) factor)*
+  - factor ((*|/) factor)*
 
 factor 	
-	- number
-	- -number
-	(expr)
+  - number
+  - -number
+  - (expr)
