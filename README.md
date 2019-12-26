@@ -32,16 +32,16 @@ Interpreter:
   - The way we interpret the outcome or command is by the root of the tree. For example, if the root is a number operation node, the outcome of the interpretation will be a number.
   - As another example, if the root is a keyword, we know we are trying to set a variable. The variable will be added to the variable lookup table.
 
-#Grammar Rules
+# Grammar Rules
 (As of now)
 
 expr	:	attribute keyword identifier = expr
-		:	keyword identifier = expr
-		: 	identifer = expr
-		:	factor ((+|-) term)*
+	:	keyword identifier = expr
+	: 	identifer = expr
+	:	factor ((+|-) term)*
 
 term	:	factor ((*|/) factor)*
 
 factor 	:	number
-		:	-number
-		:	(expr)
+	:	-number
+	:	(expr)
