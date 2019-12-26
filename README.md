@@ -12,7 +12,7 @@ Features to be implemented:
   - Error Messages
   - Printing to the console
 
-#Internals
+# Internals
 The G++ program operates under 3 main modules. 
 Each file is read line by line, and each passes through all modules.
 
