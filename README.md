@@ -35,13 +35,16 @@ Interpreter:
 # Grammar Rules
 (As of now)
 
-expr	:	attribute keyword identifier = expr
-	:	keyword identifier = expr
-	: 	identifer = expr
-	:	factor ((+|-) term)*
+expr	
+	- attribute keyword identifier = expr
+	- keyword identifier = expr
+ 	- identifer = expr
+	- factor ((+|-) term)*
 
-term	:	factor ((*|/) factor)*
+term	
+	- factor ((*|/) factor)*
 
-factor 	:	number
-	:	-number
-	:	(expr)
+factor 	
+	- number
+	- -number
+	(expr)
